@@ -3,7 +3,7 @@
 **Author Name**: lith osama zuhair
 
 ## WRRC
-![image](assest/request.png)
+![image](assest/lithh.png)
 ## Overview
 
 ## Getting Started

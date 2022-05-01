@@ -4,6 +4,9 @@ const app = express()
 const dataJson=require('./Movie Data/data.json')
 const port = 3000
 const User=new Select(dataJson.title,dataJson.poster_path,dataJson.overview)
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
+
 
 
 require('dotenv').config()
@@ -13,6 +16,37 @@ const apiKey=process.env.SECRET_KEY
 
 
 
+////////////////////////////////////////////////////database////////////////////////////////////////////
+const {  Client } = require('pg')
+const connectionString = 'postgresql://dbuser:secretpassword@database.server.com:3211/mydb'
+const client = new Client({
+  host:"localhost",
+  port:"5432",
+  password:"12345",
+  user:"postgres",
+  database:"lith"
+})
+client.connect()
+
+
+
+////////////////////////////////////////////get all databasse/////////////////////////////////////////
+
+app.get("/getMovies",(req,res)=>{
+  client.query('SELECT * FROM land', (err, resbase) => {
+    res.json(resbase.rows)
+    client.end()
+  })
+})
+
+//////////////////////////////////////////post movie////////////////////////////////////////////////
+
+app.post("/addMovie",(req,res)=>{
+  const{id,name,movie}=(req.body)
+  let value=[id,name,movie]
+  let sql='INSERT INTO land (id,name,movie) VALUES ($1,$2,$3)'
+  client.query(sql,value).then().catch()
+})
 
 
 
@@ -23,6 +57,9 @@ app.get('/', (req, res) => {
 app.get('/favorite', (req, res) => {
     res.send('Welcome to Favorite Page')
 })
+
+
+/////////////////////////////////////////////get trindig api///////////////////////////////////////
 app.get('/trending', (req, res) => {
     let url=`https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}&language=en-US`
     axios.get(url)
@@ -38,6 +75,9 @@ app.get('/trending', (req, res) => {
   })
 
 })
+
+
+////////////////////////////////////////////////search api ////////////////////////////////////////////////
 
 app.get('/search', (req, res) => {
     let quer=req.query.query
