@@ -10,7 +10,7 @@ app.use(bodyParser.json())
 
 
 require('dotenv').config()
-const apiKey=process.env.SECRET_KEY
+const apiKey="47c347695c678d86f909c7e7475d3dde"
 
 
 
@@ -79,11 +79,10 @@ app.get('/trending', (req, res) => {
 
 ////////////////////////////////////////////////search api ////////////////////////////////////////////////
 
-app.get('/search', (req, res) => {
-    let quer=req.query.query
+app.get('/search/:query', (req, res) => {
+    let quer=req.params.query
     console.log(quer)
     let url=`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${quer}&page=2`
-
     axios.get(url)
   .then(function (response) {
       res.json(response.data)
@@ -94,11 +93,31 @@ app.get('/search', (req, res) => {
 
 })
 
+/////////////////////////////////////////////update request///////////////////////////////////////
+app.put('/UPDATE/:id', (req, res) => {
+  (req.params.id)
+  client.query(`UPDATE land SET title = 'freddy@gmail.com' WHERE id = ${(req.params.id)};`, (err, resbase) => {
+    res.json("update successful")
+    client.end()
+  })
+ 
+})
 
+app.delete('/DELETE/:id',(req,res)=>{
+  console.log(  (req.params.id)  )
+  client.query(`DELETE FROM land WHERE id =${  (  (req.params.id)  )  }`, (err, resbase) => {
+    res.json("delete successful")
+    client.end()
+  })
+})
 
-
-
-
+app.get("/getMovie/:id",(req,res)=>{
+  (  (req.params.id)  )
+  client.query(`SELECT * FROM land WHERE id=${  (  (req.params.id)  )  }`, (err, resbase) => {
+    res.json(resbase.rows)
+    client.end()
+  })
+})
 
 
 
